@@ -8,8 +8,8 @@ fun main(args: Array<String>) {
 
 object PrinterCopyrightNotice {
 
-    val currentYear = Year.now().value
+    private val currentYear = Year.now().value
 
-    fun getTagLine() = "Best Printer Company"
+    private fun getTagLine() = "Best Printer Company"
     fun getCopyRightNotice() = "\u00A9 - ${getTagLine()}: $currentYear"
 }
