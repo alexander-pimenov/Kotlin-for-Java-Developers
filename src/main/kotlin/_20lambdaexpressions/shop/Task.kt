@@ -16,10 +16,10 @@ private fun isCity(city : City) : (Customer) -> Boolean = {it.city == city}
 
 /// max & min & sum
 // Return a customer whose order count is the highest among all customers
-fun Shop.getCustomerWithMaximumNumberOfOrders(): Customer? = customers.maxBy { it.orders.count() }
+fun Shop.getCustomerWithMaximumNumberOfOrders(): Customer? = customers.maxByOrNull { it.orders.count() }
 
 // Return the most expensive product which has been ordered
-fun Customer.getMostExpensiveOrderedProduct(): Product? = orders.flatMap({ it.products }).maxBy({ it.price })
+fun Customer.getMostExpensiveOrderedProduct(): Product? = orders.flatMap { it.products }.maxByOrNull { it.price }
 
 // Return the sum of prices of all products that a customer has ordered.
 // Note: the customer may order the same product for several times.
@@ -28,7 +28,7 @@ fun Customer.getTotalOrderPrice(): Double = orders.flatMap { it.products }.sumBy
 
 /// sort
 // Return a list of customers, sorted by the ascending number of orders they made
-fun Shop.getCustomersSortedByNumberOfOrders(): List<Customer> = customers.sortedBy({ it.orders.size })
+fun Shop.getCustomersSortedByNumberOfOrders(): List<Customer> = customers.sortedBy { it.orders.size }
 
 
 ///groupBy

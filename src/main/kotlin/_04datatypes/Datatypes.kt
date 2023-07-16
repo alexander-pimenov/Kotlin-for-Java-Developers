@@ -98,7 +98,7 @@ fun main(args: Array<String>) {
     for (elem in mixedArray) {
         println(elem)
     }
-    println(mixedArray is Array<Any>)
+    println(mixedArray is Array<*>)
 
     // this is Array<Int>
     val myArrayOfInts = arrayOf(1, 3, 4, 6)

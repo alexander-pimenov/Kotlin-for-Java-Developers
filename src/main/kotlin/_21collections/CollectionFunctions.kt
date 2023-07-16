@@ -37,7 +37,7 @@ fun main(args: Array<String>) {
 
     // max value in list
     val ints = listOf(1, 2, 3, 4)
-    println(ints.max())
+    println(ints.maxOrNull())
 
     // convert to mutable list
     val mutableInts = ints.toMutableList()
