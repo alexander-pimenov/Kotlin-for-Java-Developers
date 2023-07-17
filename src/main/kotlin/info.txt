@@ -1,0 +1,2 @@
+Котлин Коанс - выучи котлин практикуясь (https://kotlinlang.org/docs/koans.html)
+https://play.kotlinlang.org/koans/overview

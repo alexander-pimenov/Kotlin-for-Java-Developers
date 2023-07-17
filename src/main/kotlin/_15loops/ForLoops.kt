@@ -1,6 +1,6 @@
 package _15loops
 
-fun main(args: Array<String>) {
+fun main() {
 
     // while and do-while loops have not changed
     // for loops have, and operate on ranges
@@ -81,4 +81,51 @@ fun main(args: Array<String>) {
             }
         }
     }
+
+    println("===== Циклы =====")
+
+    //пример for each
+    //объявим НЕИЗМЕНЯЕМЫЙ список
+    val items1 = listOf("apple", "plum", "orange") //Java - List.of()
+    val items2 = listOf<String>("apple", "plum", "orange") //Java - List.of()
+
+    //так объявляем неизменяемый список
+    var items3 = mutableListOf("apple", "plum", "orange") //Java - ArrayList
+
+    for (it in items1) {
+        println(it)
+    }
+    for (it in items2) {
+        println(it)
+    }
+
+    //пример while
+    //заводим индекс элемента
+    var index = 0
+    while (index < items3.size) {
+        println("Item at $index is ${items3[index]}")
+        index++
+    }
+
+    //Диапазоны (как в Python)
+    println(3..10)
+
+    //с помощью оператора in можно проверить входит ли в диапазон
+    println(5 in 3..10)
+
+    //итерируемся по диапазону
+    for (i in 1..5)
+        println(i)
+
+    //исключим последний элемент - until
+    for (i in 1 until 5)
+        println(i)
+
+    //итерируемся в убывающем порядке - downTo
+    for (i in 5 downTo 1)
+        println(i)
+
+    //укажем шаг итерации
+    for (i in 1..100 step 10)
+        println(i)
 }

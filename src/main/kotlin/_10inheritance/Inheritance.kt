@@ -1,11 +1,17 @@
 package _10inheritance
 
-fun main(args: Array<String>) {
+fun main() {
     val laserPrinter = LaserPrinter("epson")
     laserPrinter.printModel()
     println(laserPrinter.bestSellingPrice())
 
     SubclassOfClassWithoutPrimaryConstructor(10)
+
+    val sam = RestaurantCustomer("Sam", "Mixed salad")
+    sam.greet() // An implementation of an abstract function
+    sam.order() // A member function
+    sam.eat() // An implementation of an interface function
+    sam.pay(10) // A default implementation in an interface
 }
 
 abstract class Printer(val modelName: String) {
@@ -59,3 +65,26 @@ class SubclassOfClassWithoutPrimaryConstructor : ClassWithoutPrimaryConstructor 
 }
 // data classes cannot be extended
 // open data class DataClassParent(val x: Int) { }
+
+abstract class Human(val name: String) {
+    //абстрактный метод абстрактного класса
+    abstract fun greet()
+}
+
+interface FoodConsumer {
+    //абстрактный метод в интерфейсе
+    fun eat()
+    //дефолтный метод в интерфейсе
+    fun pay(amount: Int) = println("Delicious! Here's $amount bucks!")
+}
+
+class RestaurantCustomer(name: String, val dish: String) : Human(name), FoodConsumer {
+    fun order() = println("$dish, please!")
+    override fun greet() {
+        println("*Eats $dish*")
+    }
+
+    override fun eat() {
+        println("It's me, $name")
+    }
+}

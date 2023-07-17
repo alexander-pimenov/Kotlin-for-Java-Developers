@@ -1,4 +1,4 @@
-//package _20lambdaexpressions.shop
+package _20lambdaexpressions.shop
 
 // Return true if all customers are from the given city
 fun Shop.checkAllCustomersAreFrom(city: City): Boolean = customers.all(isCity(city))

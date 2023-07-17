@@ -1,6 +1,6 @@
 package _02declarations
 
-fun main(args: Array<String>) {
+fun main() {
     val number = 25
     val number2: Int
     number2 = 10

@@ -1,4 +1,4 @@
-//package _20lambdaexpressions.shop
+package _20lambdaexpressions.shop
 
 data class Shop(val name: String, val customers: List<Customer>)
 

@@ -63,7 +63,7 @@ fun main(args: Array<String>) {
             -1
         }
     }
-    println("y has value $y and is of type ${y.javaClass }")
+    println("y has value $y and is of type ${y.javaClass}")
 
     // we can use it with enums too. note that we do not need an else if we use all values in the enum
     val timeOfYear = Seasons.WINTER
@@ -83,4 +83,40 @@ fun main(args: Array<String>) {
         num3 < num4 -> println("$num3 is less then $num4")
         else -> println("$num3 is equal to $num4")
     }
+
+    println("===== WhenExpression =====")
+    //она похожа на switch-case из Java, но удобнее
+    //Kotlin многие проверки берет на себя
+    testWhen(15)
+    testWhen("Hello")
+    testWhen(2)
+    testWhen(259)
 }
+
+// Any - тип обозначающий любой тип данных,
+// аналогично Object из Java
+fun testWhen(input: Any) {
+    when (input) {
+        1 -> println("One")
+        2 -> println("Two")
+        //можно проверить диапазон, если пришло число
+        in 10..20 -> println("from 10 to 20")
+        //проверим если это строка с помощью - is
+        is String -> println("Была введена строка длинной ${input.length}")
+        else -> println("Что-то еще")
+    }
+}
+
+/**
+ * Здесь примерный код на Java этого метода:
+ *
+ * public void test(Object input) {
+ *  if (input instanceOf String) {
+ *      String inpStr = (String) input;
+ *      ....
+ *  }
+ *  if (input instanceOf Integer) {
+ *      ...
+ *  }
+ * }
+ */

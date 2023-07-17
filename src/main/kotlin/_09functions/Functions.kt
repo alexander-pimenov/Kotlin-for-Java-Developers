@@ -1,6 +1,6 @@
 package _09functions
 
-fun main(args: Array<String>) {
+fun main() {
     println(labelledMultiply(3, 4))
     println(simplifiedLabelledMultiply(9, 4, "The result is:"))
     // if you name one argument, all of them must be named
@@ -29,6 +29,45 @@ fun main(args: Array<String>) {
     for (emp in fullEmployeeList) {
         println(emp)
     }
+
+    println("===== Функции =====")
+
+    println(testSimple1())
+    println(testSimple2())
+    println(testSimple3(4, 5))
+    println(testSimple4(6, 8))
+    testSimple5(7, 9)
+
+    //посмотрим, как работают именованные аргументы
+    //когда в функции большое количество аргументов и мы явно указываем
+    //какому аргументу передаем значение
+    testNamedArguments(4, 5, 6)
+    testNamedArguments(z = 4, x = 5, y = 6)
+
+    //вызов функции с аргументами по умолчанию
+    testDefaultArguments()
+    testDefaultArguments(y = 15)
+    testDefaultArguments(x = 25)
+    testDefaultArguments(35)
+    testDefaultArguments(10, 20)
+    println(foo("Vasya"))
+    println(foo("Vasya", 55))
+    println(foo("Vasya", 55, true))
+    println(foo(number = 655, name = ""))
+
+    println("----------Печатаем четные числа----------")
+    //нужно через запятую указать элементы
+    printEvent(1, 2, 3, 4, 5, 6, 7, 8, 9)
+
+    //Если у нас есть массив, то с помощью оператора * мы его распределим на варарги
+    //и после элементов из массива можем еще указывать элементы
+    printEvent(*intArrayOf(1, 2, 3, 4, 5), 6, 7, 8, 9)
+
+    //создадим диапазон, преобразуем его в массив и используя * используем в качестве
+    //аргумента в функции
+    val intRange = 100..110
+    printEvent(*intRange.toList().toIntArray())
+    println("------------------------------")
 }
 
 // default return type is Unit, unless specified.
@@ -54,7 +93,7 @@ fun functionWithLotsOfArgs(height: Int, width: Int, depth: Int, weight: Int): In
 
 data class Employee(val firstName: String) {
     // public and final by default
-    fun uppercaseFirstName() = firstName.toUpperCase()
+    fun uppercaseFirstName() = firstName.uppercase()
 }
 
 fun printEmployeeNamesInUppercase(vararg employees: Employee) {
@@ -64,4 +103,48 @@ fun printEmployeeNamesInUppercase(vararg employees: Employee) {
     for (employee in employees) {
         println(employee.uppercaseFirstName())
     }
+}
+
+//простая функция без аргументов и возвращающая целое число
+fun testSimple1(): Int {
+    return 5 + 5
+}
+
+//более простая запись простой функции - в одну строчку
+fun testSimple2(): Int = 5 + 5
+
+//функция с аргументами
+fun testSimple3(x: Int, y: Int): Int = x + y
+
+//функция с аргументами и типом String
+fun testSimple4(x: Int, y: Int): String {
+    return "String -> ${x + y}"
+}
+
+//функция с аргументами типа VOID
+fun testSimple5(x: Int, y: Int) {
+    println("String -> ${x + y}")
+}
+
+//функция с именованными аргументами
+fun testNamedArguments(x: Int, y: Int, z: Int): List<Int> {
+    return listOf(x, y, z)
+}
+
+//аргументы по умолчанию (такое есть в Python)
+//это очень хорошая альтернатива перегрузке методов !!!
+fun testDefaultArguments(x: Int = 1, y: Int = 2) {
+    println(x + y)
+}
+
+//В Kotlin не нужна перегрузка методов, т.к. есть функции с аргументами по-умолчанию
+fun foo(name: String, number: Int = 42, toUpperCase: Boolean = false): String {
+    return (if (toUpperCase) name.uppercase() else name) + number
+}
+
+
+//vararg
+//в этой функции будем печатать пришедшие аргументы, но только четные
+fun printEvent(vararg numbers: Int) {
+    numbers.forEach { e -> if (e % 2 == 0) println(e) }
 }

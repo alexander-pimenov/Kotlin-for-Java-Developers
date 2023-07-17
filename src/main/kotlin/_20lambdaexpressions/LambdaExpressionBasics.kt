@@ -1,6 +1,6 @@
 package _20lambdaexpressions
 
-fun main(args: Array<String>) {
+fun main() {
 
     // lambdas are declared in curly braces and can be assigned to a variable
     // but other than in Java, we can execute them with a run-command:
