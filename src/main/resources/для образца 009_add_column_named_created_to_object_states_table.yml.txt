@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: add created column to object states
+      author: alex-pim@team.ru
+      changes:
+        # add column
+        - addColumn:
+            tableName: object_states
+            columns:
+              - column:
+                  name: created
+                  type: timestamp with time zone
+        # create indexes
+        - sql:
+            sql: "CREATE INDEX object_states_created_btree_idx ON object_states USING btree (created);"
+      rollback:
+        - dropIndex:
+            indexName: object_states_created_btree_idx
+
+Для установления времени now по умолчанию:
+databaseChangeLog:
+  - changeSet:
+      id: add created column to object states
+      author: alex-pim@team.ru
+      changes:
+        # add column
+        - addColumn:
+            tableName: object_states
+            columns:
+              - column:
+                  name: created
+                  type: timestamp with time zone
+                  defaultValueDate: now()
+Или такой вариант:
+databaseChangeLog:
+  - property:
+      dbms: postgresql
+      name: now
+      value: now()
+  - changeSet:
+      id: add created column to transactions
+      author: alex-pim@team.ru
+      changes:
+        # add column
+        - addColumn:
+            tableName: transactions
+            columns:
+              - column:
+                  name: created
+                  type: timestamp with time zone
+                  defaultValue: ${now}
+

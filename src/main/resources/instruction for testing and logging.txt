@@ -1,0 +1,99 @@
+Формат логирования
+    Если метод логируется целиком, то формат следующий:
+        Укзывается класс и название метода, обозначается его начало через "start", предоставляется набор входных параметров метода
+            log.debug("ClassName#methodName - start: param1 = {}, param2 = {}", param1, param2);
+        Укзывается класс и название метода, обозначается его конец через "end", предоставляется выходной параметр
+            log.debug("ClassName#methodName - end: result = {}, result);
+
+        Например:
+        public VacancyDTO entityToDto(Vacancy vacancy) {
+                log.debug("VacancyConverter#entityToDto - start: vacancy = {}", vacancy);
+                //какой то кусок кода
+                log.debug("VacancyConverter#entityToDto - end: result = {}", dto);
+            return dto;
+        }
+
+
+    Если логируется отдельный интересующий нас момент в коде
+        Укзывается класс и название метода, предоставляется набор значимых переменных для отображения
+            log.trace("ClassName#methodName: var1 = {}, var2 = {}", var1, var2)
+
+
+@Builder создает объекты, @Accessors позволяет их менять
+
+Если объект используется в одном месте в тесте, можно не выносить в переменную. Это хорошо видно в тестах:
+    @Test
+    public void loadToDatabaseFromBeameryWhenSaveNewRecordTest() {
+
+        doReturn(List.of(getSingleCandidateDTO()))
+                .when(candidateProcessorService).getAllRecords();
+
+Вместо:
+    @Test
+    public void loadToDatabaseFromBeameryWhenSaveNewRecordTest() {
+        CandidateDTO singleCandidateDTO = getSingleCandidateDTO();
+
+        doReturn(List.of(singleCandidateDTO))
+                .when(candidateProcessorService).getAllRecords();
+
+
+DatabaseAccessService#saveCandidateToNotesRelationIfNotExist
+DatabaseAccessService#getAllCandidatesIntegrationIdToFemidaIdPairs
+DatabaseAccessService#getAllPinnedNotesForCandidateIntegrationIdWithSuccessfulState
+DatabaseAccessService#markPinnedNotesAsPendingForBeameryByBeameryIds
+NoteReconciliationService#processSentRecords - else часть
+NoteReconciliationService#processSentRecords - возможно целиком, сравнить поведение родительского метода и наследника
+NoteReconciliationService#processPinnedRecords
+
+В нашем сервисе реализованы четыре джобы, каждая выполняет свои обязанности и запускается по расписанию:
+1) load to database
+2) process retry records
+3) load to beamery
+4) process sent record
+
+При тестировании
+можем использовать @SpyBean, чтобы обернуть любой существующий компонент
+шпионом Mockito (Mockito spy).
+
+/* @Test
+    public void loadToDatabaseFromBeameryWhenSaveTransactionRecordTest() {
+
+        Optional<String> stringOptional = Optional.of(TEMPLATE_DTO_DATA);
+        List<CandidateDTO> candidateList = getExpectedListOfCandidateDTOs();
+        CandidateDTO candidateDTO = getSingleCandidateDTOEqualsTransactionalLogRecord();
+
+//        when(beameryAccessService.getDTOListStringOptional(anyString(), anyString())).thenReturn(stringOptional);
+//        when(beameryAccessService.getAllDTOsStringViaQueryParams(anyString(), anyString())).thenReturn(String.valueOf(candidateList));
+//
+//        when(objectMapperSupportService.getStringFromObject(any())).thenReturn(TEMPLATE_DTO_DATA);
+//        when(objectMapperSupportService.getObjectFromJsonStringSafe(anyString(), any())).thenReturn(candidateList);
+//
+//        when(databaseAccessService.getLastPollLogRecord(anyString())).thenReturn(pollLogRecord());
+        doReturn(List.of(candidateDTO))
+                .when(candidateProcessorService).getAllRecords();
+        when(databaseAccessService.getTransactionLogRecordByBeameryIdObjectType(any(), any()))
+                .thenReturn(transactionLogRecord());
+
+        candidateProcessorService.loadToDatabaseFromBeamery();
+
+
+        verify(databaseAccessService, times(1))
+                .getTransactionLogRecordByBeameryIdObjectType(FIRST_BEAMERY_ID_FOR_CANDIDATE, CANDIDATE_CLASS_NAME);
+        verify(databaseAccessService, times(1)).saveTransactionRecord(eq(TEMPLATE_INTEGRATION_ID), anyString(), anyString());
+        verify(databaseAccessService, times(0)).updateExistingRecord(any(), anyString(), anyString(), anyString());
+        verify(databaseAccessService, times(0)).saveNewRecord(anyString(), anyString(),
+                anyString(), anyString(), anyString());
+
+//        verify(objectMapperSupportService, times(1)).getStringFromObject(anyString());
+//        verify(databaseAccessService, times(1)).saveSuccessNewPollRecord(anyString(), anyString(), anyInt());
+//        verify(databaseAccessService, times(1)).saveSuccessNewPollRecord(anyString(), anyString(), anyInt());
+
+    }
+*/
+
+
+Caused by: java.io.IOException: too many concurrent streams
+2021-12-08 19:44:14.192 [ERROR] --- [scheduling-5 ]  c.e.b.services.BeameryAccessService - Exception while calling Beamery. Exception message: too many concurrent streams
+2021-12-08 19:44:14.194 [WARN ] --- [scheduling-5 ]  c.e.b.s.NoteReconciliationService     - BaseReconciliationService#getUpdatedRecords: Exception occurred while requesting updated records from Beamery. Exception message: com.epam.beamery.exception.CustomRestClientException: java.io.IOException: too many concurrent streams
+Если бы приложение знало, что сервер S принимает только N параллельных потоков, оно могло бы принять меры,
+чтобы не запускать более N одновременных запросов к серверу S.
