@@ -83,6 +83,9 @@ fun main() {
     operation = ::subtract
     val result3 = operation(14, 5)
     println(result3) // 9
+
+    println(alphabetUsingApply())
+    println(alphabetUsingBuildStringFunction())
 }
 
 // with converts the instance you are passing to a receiver object, and inside the lambda we don't need to refer to the receiver
@@ -130,3 +133,21 @@ fun subtract(a: Int, b: Int): Int {
 fun hello() {
     println("Hello Kotlin")
 }
+
+// Использование apply для генерации алфавита
+fun alphabetUsingApply() =
+    StringBuilder().apply {
+        for (letter in 'A'..'Z') {
+            append(letter)
+        }
+        append("\nNow I know alphabet!!!")
+        toString()
+    }
+
+fun alphabetUsingBuildStringFunction() =
+    buildString {
+        for (letter in 'A'..'Z') {
+            append(letter)
+        }
+        append("\nNow I know alphabet!!!")
+    }
