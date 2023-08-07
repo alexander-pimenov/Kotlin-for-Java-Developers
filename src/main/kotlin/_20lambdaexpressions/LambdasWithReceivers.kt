@@ -1,5 +1,13 @@
 package _20lambdaexpressions
 
+/**
+ * Лямбда-выражения с получателем - это особый вид анонимных функций, которые могут непосредственно вызывать методы
+ * специального объекта-получателя.
+ *
+ * Функция стандартной библиотеки with позволяет вызвать несколько методов одного объекта,
+ * не повторяя имени ссылки на него.
+ * Функция аррlу позволяет создать и инициализировать любой объект в стиле шаблона <<Строитель>>.
+ */
 fun main() {
 
     println(countTo100UsingWith())
@@ -12,6 +20,7 @@ fun main() {
         Employee("Mike", "Ness", 2015)
     )
 
+    println("-------------------------------")
     findByLastName(employees, "Smith")
     findByLastName(employees, "Hudson")
 
@@ -89,6 +98,7 @@ fun main() {
 }
 
 // with converts the instance you are passing to a receiver object, and inside the lambda we don't need to refer to the receiver
+//with преобразует экземпляр, который вы передаете, в объект receiver, и внутри лямбда-выражения нам не нужно ссылаться на receiver
 fun countTo100UsingWith() =
     with(StringBuilder()) {
         for (i in 1..99) {
@@ -98,7 +108,8 @@ fun countTo100UsingWith() =
         append("100")
     }.toString()
 
-// Using apply is similar to with, but apply returns the receiver object, that apply is called on (SB in this case
+// Using apply is similar to with, but apply returns the receiver object, that apply is called on (StringBuilder in this case)
+// Использование apply аналогично with, но apply возвращает объект-получатель, для которого вызывается apply (в данном случае StringBuilder)
 fun countTo100UsingApply() =
     StringBuilder().apply {
         for (i in 1..99) {
@@ -112,6 +123,9 @@ fun countTo100UsingApply() =
 // return in the lambda returns from both the lambda and the function if the calling funciton (forEach) is inlined
 // this is called a non-local return
 // we can use labels to modify this behaviour. Again, this can get sticky quickly like in this example right here
+// return в лямбде возвращает как из лямбды, так и из функции, если вызывающая функция (forEach) встроена
+// это называется нелокальным возвратом
+// мы можем использовать метки, чтобы изменить это поведение. Опять же, это может быстро стать липким, как в этом примере прямо здесь
 fun findByLastName(employees: List<Employee>, key: String) {
     employees.forEach returnBlock@{
         if (it.lastName == key) {
