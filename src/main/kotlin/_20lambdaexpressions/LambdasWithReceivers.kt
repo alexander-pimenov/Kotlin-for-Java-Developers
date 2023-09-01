@@ -28,8 +28,8 @@ fun main() {
     // obvs naming the parameters is much better than labels
     "Some String".apply outer@{
         "Another String".apply {
-            println(toLowerCase())
-            println(this@outer.toUpperCase())
+            println(lowercase())
+            println(this@outer.uppercase())
         }
     }
 

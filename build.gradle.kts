@@ -1,32 +1,33 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    val kotlinVersion = "1.5.10"
+    val kotlinVersion = "1.7.10"
     java
     kotlin("jvm") version kotlinVersion
+    //kotlin("plugin.spring") version kotlinVersion
     jacoco
-
-    id("org.springframework.boot") version "2.6.3"
-    //id("org.jetbrains.kotlin.jvm") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.spring") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.jpa") version kotlinVersion
 
+    id("org.springframework.boot") version "2.4.8"
+    id("io.spring.dependency-management") version "1.0.10.RELEASE"
+    //id("org.jetbrains.kotlin.jvm") version kotlinVersion
+
     //support Idea IDE
     id("idea")
-    id("io.freefair.lombok") version "6.2.0"
-    id("io.freefair.aspectj.post-compile-weaving") version "6.2.0"
-    id("io.spring.dependency-management") version "1.0.10.RELEASE"
+    id("io.freefair.lombok") version "6.6.3"
+    id("io.freefair.aspectj.post-compile-weaving") version "6.6.3"
+
     // Build uber-jar
     id("com.github.johnrengelman.shadow") version "6.1.0" apply false
     id("maven-publish")
 
 }
 
+extra["kotlin.version"] = "1.7.10"
 
-//apply plugin: "java"
 
 System.getProperties()
-
 
 val allureVersion = "2.8.0"
 val junit5Version = "5.8.1"
@@ -49,12 +50,23 @@ val springBootVersion = "2.6.3"
 version = "1.0.0-SNAPSHOT"
 //group = "ru.pimalex.app" //это для примера
 
-java.sourceCompatibility = JavaVersion.VERSION_11
-//targetCompatibility = JavaVersion.VERSION_11
+val javaVersion = JavaVersion.VERSION_11
 
+java.sourceCompatibility = javaVersion
+java.targetCompatibility = javaVersion
 
+//buildscript {
+//    repositories {
+//        maven {
+//            url = uri("https://plugins.gradle.org/m2/")
+//        }
+//    }
+//    dependencies {
+//        classpath("io.freefair.gradle:aspectj-plugin:6.6.3")
+//    }
+//}
 
-
+apply(plugin = "io.freefair.aspectj.post-compile-weaving")
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
@@ -78,6 +90,8 @@ dependencies {
     //dependencies {
     implementation(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
     implementation("org.springframework.boot:spring-boot-starter")
+    implementation("io.freefair.aspectj.post-compile-weaving:io.freefair.aspectj.post-compile-weaving.gradle.plugin:6.6.3")
+
 //    testImplementation("org.springframework.boot:spring-boot-starter-test") {
 //        exclude(mapOf("group" to "org.junit.vintage", "module" to "junit-vintage-engine"))
 //    }
@@ -86,9 +100,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.h2database:h2")
+
+    //Kotlin
+//    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+//    runtimeOnly("org.jetbrains.kotlin:kotlin-bom")
+
+    //Test
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(mapOf("group" to "org.junit.vintage", "module" to "junit-vintage-engine"))
     }
@@ -156,11 +176,24 @@ dependencies {
     implementation("org.apache.commons:commons-email:1.5")
 }
 
+//the<io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension>().apply {
+//    imports {
+//        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+//        //mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+//    }
+//}
+
 dependencyManagement {
     dependencies {
         imports {
             mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
         }
+    }
+}
+
+tasks.withType<KotlinCompile>{
+    kotlinOptions{
+        jvmTarget = javaVersion.toString()
     }
 }
 
