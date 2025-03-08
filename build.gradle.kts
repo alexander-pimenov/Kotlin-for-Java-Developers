@@ -1,22 +1,24 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    val kotlinVersion = "1.7.10"
+    val kotlinVersion = "1.9.25"
     java
-    kotlin("jvm") version kotlinVersion
-    //kotlin("plugin.spring") version kotlinVersion
+    application
     jacoco
-    id("org.jetbrains.kotlin.plugin.spring") version kotlinVersion
-    id("org.jetbrains.kotlin.plugin.jpa") version kotlinVersion
+    kotlin("jvm") version kotlinVersion
+    //id("org.jetbrains.kotlin.jvm") version kotlinVersion //то же самое что и выше
+    kotlin("plugin.spring") version kotlinVersion
+    //id("org.jetbrains.kotlin.plugin.spring") version kotlinVersion
+    kotlin("plugin.serialization") version kotlinVersion
+    //id("org.jetbrains.kotlin.plugin.jpa") version kotlinVersion
 
-    id("org.springframework.boot") version "2.4.8"
-    id("io.spring.dependency-management") version "1.0.10.RELEASE"
-    //id("org.jetbrains.kotlin.jvm") version kotlinVersion
+    id("org.springframework.boot") version "3.4.2"
+    id("io.spring.dependency-management") version "1.1.7"
 
     //support Idea IDE
     id("idea")
     id("io.freefair.lombok") version "6.6.3"
-    id("io.freefair.aspectj.post-compile-weaving") version "6.6.3"
+   // id("io.freefair.aspectj.post-compile-weaving") version "6.6.3"
 
     // Build uber-jar
     id("com.github.johnrengelman.shadow") version "6.1.0" apply false
@@ -24,7 +26,6 @@ plugins {
 
 }
 
-extra["kotlin.version"] = "1.7.10"
 
 
 System.getProperties()
@@ -45,15 +46,21 @@ val jsonSchemaValidatorVersion = "4.3.0"
 val libphonenumberVersion = "8.12.34"
 val validatorVersion = "1.7"
 val sqsVersion = "1.0.8"
-val springBootVersion = "2.6.3"
 
 version = "1.0.0-SNAPSHOT"
 //group = "ru.pimalex.app" //это для примера
 
-val javaVersion = JavaVersion.VERSION_11
+val javaVersion = JavaVersion.VERSION_21
 
-java.sourceCompatibility = javaVersion
-java.targetCompatibility = javaVersion
+java {
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+extra["kotlin.version"] = "1.9.25"
 
 //buildscript {
 //    repositories {
@@ -66,31 +73,25 @@ java.targetCompatibility = javaVersion
 //    }
 //}
 
-apply(plugin = "io.freefair.aspectj.post-compile-weaving")
+//apply(plugin = "io.freefair.aspectj.post-compile-weaving")
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-    }
-}
 
-val test by tasks.getting(Test::class) {
-    useJUnitPlatform()
-}
+
 
 repositories {
     mavenLocal()
     mavenCentral()
-    jcenter()
+    maven(url = "https://repo.spring.io/milestone")
+    maven(url = "https://repo.spring.io/snapshot")
 }
 
 dependencies {
 
     //dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("io.freefair.aspectj.post-compile-weaving:io.freefair.aspectj.post-compile-weaving.gradle.plugin:6.6.3")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+   // implementation("io.freefair.aspectj.post-compile-weaving:io.freefair.aspectj.post-compile-weaving.gradle.plugin:6.6.3")
 
 //    testImplementation("org.springframework.boot:spring-boot-starter-test") {
 //        exclude(mapOf("group" to "org.junit.vintage", "module" to "junit-vintage-engine"))
@@ -145,13 +146,17 @@ dependencies {
     // allures
     implementation("io.qameta.allure:allure-rest-assured:$allureVersion")
     implementation("io.qameta.allure:allure-generator:$allureVersion")
-    implementation("org.aspectj:aspectjweaver:$aspectJweaverVersion")
+    //implementation("org.aspectj:aspectjweaver:$aspectJweaverVersion")
     testRuntimeOnly("io.qameta.allure:allure-junit5:$allureVersion")
 
     //REST client
-    implementation("io.rest-assured:rest-assured:$restAssuredVersion")
-    implementation("io.rest-assured:json-path:$jsonpathVersion")
-    implementation("io.rest-assured:json-schema-validator:$jsonSchemaValidatorVersion")
+//    implementation("io.rest-assured:rest-assured:$restAssuredVersion"){
+//        exclude(group = "org.codehaus.groovy", module = "groovy-json")
+//        exclude(group = "org.codehaus.groovy", module = "groovy")
+//        exclude(group = "org.codehaus.groovy", module = "groovy-xml")
+//    }
+//    implementation("io.rest-assured:json-path:$jsonpathVersion")
+//    implementation("io.rest-assured:json-schema-validator:$jsonSchemaValidatorVersion")
 
     //TestRail
     implementation("com.codepine.api:testrail-api-java-client:$testrailVersion")
@@ -183,18 +188,25 @@ dependencies {
 //    }
 //}
 
-dependencyManagement {
-    dependencies {
-        imports {
-            mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
-        }
+//dependencyManagement {
+//    dependencies {
+//        imports {
+//            mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+//        }
+//    }
+//}
+
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+//        jvmTarget = "1.8"
+        jvmTarget = javaVersion.toString()
+        freeCompilerArgs = listOf("-Xjsr305=strict")
     }
 }
 
-tasks.withType<KotlinCompile>{
-    kotlinOptions{
-        jvmTarget = javaVersion.toString()
-    }
+val test by tasks.getting(Test::class) {
+    useJUnitPlatform()
 }
 
 tasks.test {
