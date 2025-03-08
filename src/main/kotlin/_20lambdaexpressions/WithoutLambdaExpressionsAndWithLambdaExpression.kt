@@ -1,6 +1,16 @@
 package _20lambdaexpressions
 
 
+//### Сравнение
+//
+//1. **Без лямбд**:
+//- Нужно определять интерфейс для функции.
+//- Использовать анонимный класс для реализации интерфейса.
+//- Код становится более многословным и сложным для чтения.
+//
+//2. **С лямбдами**:
+//- Лямбда-выражение позволяет передать функцию напрямую, без необходимости создания анонимного класса.
+//- Код становится более компактным и выразительным.
 fun main() {
     val numbers = listOf(1, 2, 3, 4, 5)
 
@@ -21,6 +31,24 @@ fun main() {
     val evenNumbers2 = numbers.filter { it % 2 == 0 } //то же что и последняя строчка в переопределенном методе примере выше: param % 2 == 0
 
     println(evenNumbers2)  // Вывод: [2, 4]
+
+
+
+
+
+    // Используем анонимный класс для передачи функции
+    val squared1 = numbers.map(object : Function1<Int, Int> {
+        override fun invoke(param: Int): Int {
+            return param * param
+        }
+    })
+
+    println(squared1)  // Вывод: [1, 4, 9, 16, 25]
+
+    // Используем лямбду для передачи функции
+    val squared2 = numbers.map { it * it }
+
+    println(squared2)  // Вывод: [1, 4, 9, 16, 25]
 }
 
 // ===== Если не использовать лямбды =====
@@ -68,6 +96,30 @@ fun <T> List<T>.filter2(predicate: (T) -> Boolean): List<T> {
 //public inline fun <T> Iterable<T>.filter(predicate: (T) -> Boolean): List<T> {
 //    return filterTo(ArrayList<T>(), predicate)
 //}
+
+// Определяем интерфейс для функции
+interface Function1<in T, out R> {
+    fun invoke(param: T): R
+}
+
+// Функция map, которая принимает функцию как аргумент
+fun <T, R> List<T>.map(transform: Function1<T, R>): List<R> {
+    val result = mutableListOf<R>()
+    for (item in this) {
+        result.add(transform.invoke(item))
+    }
+    return result
+}
+
+// Функция map с лямбдой
+fun <T, R> List<T>.map(transform: (T) -> R): List<R> {
+    val result = mutableListOf<R>()
+    for (item in this) {
+        result.add(transform(item))
+    }
+    return result
+}
+
 
 
 
