@@ -59,11 +59,13 @@ class SubclassOfClassWithoutPrimaryConstructor : ClassWithoutPrimaryConstructor 
 
     // every secondary constructor delegates to the primary constructor
     // we can only explicitly call the secondary constructor of the super class if it does not have a primary constructor
+    // каждый вторичный конструктор делегирует полномочия первичному конструктору,
+    // мы можем явно вызвать вторичный конструктор суперкласса только в том случае, если у него нет первичного конструктора
     constructor(param: Int) : super(param) {
         println("im the subclass constructor")
     }
 }
-// data classes cannot be extended
+// data classes cannot be extended - data классы не могут быть расширены
 // open data class DataClassParent(val x: Int) { }
 
 abstract class Human(val name: String) {
