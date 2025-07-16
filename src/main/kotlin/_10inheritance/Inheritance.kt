@@ -15,11 +15,13 @@ fun main() {
 }
 
 abstract class Printer(val modelName: String) {
-    // 'normal' classes are final by default
-    // 'open' classes can be inherited from
-    // 'abstract' classes are open by default. otherwise, what's the point?
+    // 'normal' classes are final by default - "обычные" классы по умолчанию являются конечными/финальными
+    // 'open' classes can be inherited from - "открытые" классы могут быть унаследованы
+    // 'abstract' classes are open by default. - "абстрактные" классы по умолчанию открыты.
+    // otherwise, what's the point? - иначе какой в этом смысл?
 
     // similarly, functions are final by default, so must be declared open to be overridden
+    // аналогично, функции по умолчанию являются окончательными, поэтому для переопределения они должны быть объявлены открытыми
     open fun printModel() = println("the model name is $modelName")
 
     // abstract function must be implemented by the subclass
